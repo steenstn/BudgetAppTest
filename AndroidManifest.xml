@@ -5,8 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk android:minSdkVersion="8" />
-
-    <instrumentation
+	    <instrumentation
         android:name="com.zutubi.android.junitreport.JUnitReportTestRunner"
         android:targetPackage="budgetapp.main" />
 
