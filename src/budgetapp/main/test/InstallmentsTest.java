@@ -168,10 +168,11 @@ public class InstallmentsTest extends AndroidTestCase{
 		Installment newInstallment = new Installment(1, 1, MoneyFactory.createMoneyFromNewDouble(2), MoneyFactory.createMoneyFromNewDouble(2),
 				"2013/01/01 00:00", MoneyFactory.createMoneyFromNewDouble(2), "SecondCategory", "SecondComment", 2);
 		
-		model.editInstallment(0, newInstallment);
+		List<Installment> installments = model.getInstallments();
+		model.editInstallment(installments.get(0).getId(), newInstallment);
 		//t(long id, long transactionId, Money totalValue, Money dailyPayment,
 			//	String dateLastPaid, Money amountPaid, String category, String comment, int flags)
-		Installment resultingInstallment = model.getInstallment(0);
+		Installment resultingInstallment = model.getInstallment(installments.get(0).getId());
 		assertEquals("Incorrect totalValue",newInstallment.getTotalValue().get(),resultingInstallment.getTotalValue().get());
 		assertEquals("Incorrect dailyPayment",newInstallment.getDailyPayment().get(),resultingInstallment.getDailyPayment().get());
 		assertEquals("Incorrect dateLastPadid",newInstallment.getDateLastPaid(),resultingInstallment.getDateLastPaid());
