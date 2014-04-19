@@ -162,11 +162,11 @@ public class InstallmentsTest extends AndroidTestCase{
 	
 	public void testEditInstallment() {
 		Installment installment = new Installment(1, 1, MoneyFactory.createMoneyFromNewDouble(1), MoneyFactory.createMoneyFromNewDouble(1),
-			"firstDate", MoneyFactory.createMoneyFromNewDouble(1), "FirstCategory", "FirstComment", 1);
+			"2012/01/01 00:00", MoneyFactory.createMoneyFromNewDouble(1), "FirstCategory", "FirstComment", 1);
 		model.addInstallment(installment);
 		
 		Installment newInstallment = new Installment(1, 1, MoneyFactory.createMoneyFromNewDouble(2), MoneyFactory.createMoneyFromNewDouble(2),
-				"SecondDate", MoneyFactory.createMoneyFromNewDouble(2), "SecondCategory", "SecondComment", 2);
+				"2013/01/01 00:00", MoneyFactory.createMoneyFromNewDouble(2), "SecondCategory", "SecondComment", 2);
 		
 		model.editInstallment(0, newInstallment);
 		//t(long id, long transactionId, Money totalValue, Money dailyPayment,
