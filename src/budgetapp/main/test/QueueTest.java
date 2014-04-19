@@ -43,12 +43,16 @@ public class QueueTest extends AndroidTestCase {
 		model.processQueueItem();
 		remainingItems = model.getRemainingItemsInQueue();
 		assertEquals("Incorrect remaining items", 2, remainingItems);
+		model.processQueueItem();
 		remainingItems = model.getRemainingItemsInQueue();
 		assertEquals("Incorrect remaining items", 1, remainingItems);
+		model.processQueueItem();
 		remainingItems = model.getRemainingItemsInQueue();
 		assertEquals("Incorrect remaining items", 0, remainingItems);
+		model.processQueueItem();
 		remainingItems = model.getRemainingItemsInQueue();
 		assertEquals("Incorrect remaining items", 0, remainingItems);
+		model.processQueueItem();
 		assertEquals("Incorrect size", 4, model.getQueueSize());
 		
 		
