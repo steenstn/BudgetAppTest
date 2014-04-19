@@ -138,6 +138,51 @@ public class InstallmentsTest extends AndroidTestCase{
 		
 	}
 	
+	public void testResumeInstallment() {
+		double installmentTotalValue = -100;
+		double installmentDailyPayment = -10;
+		double installmentAmountPaid = 0;
+
+		int numberOfDays = 8;
+		
+		Installment installment = new Installment(MoneyFactory.createMoneyFromNewDouble(installmentTotalValue), MoneyFactory.createMoneyFromNewDouble(installmentDailyPayment),
+				BudgetFunctions.getDateString(), MoneyFactory.createMoneyFromNewDouble(installmentAmountPaid), "test", "testComment");
+		installment.setPaused(true);
+		assertEquals("Could not add installment.", model.addInstallment(installment), true);
+		addDays(numberOfDays);
+		List<Installment> installments = model.getInstallments();
+
+		installment = installments.get(0);
+		installment.setPaused(false);
+		model.editInstallment(installment.getId(), installment);
+		addDays(1);
+		Money temp = model.payOffInstallments();
+		assertEquals("Incorrect amount paid", installmentDailyPayment, temp.get());
+	}
+	
+	public void testEditInstallment() {
+		Installment installment = new Installment(1, 1, MoneyFactory.createMoneyFromNewDouble(1), MoneyFactory.createMoneyFromNewDouble(1),
+			"firstDate", MoneyFactory.createMoneyFromNewDouble(1), "FirstCategory", "FirstComment", 1);
+		model.addInstallment(installment);
+		
+		Installment newInstallment = new Installment(1, 1, MoneyFactory.createMoneyFromNewDouble(2), MoneyFactory.createMoneyFromNewDouble(2),
+				"SecondDate", MoneyFactory.createMoneyFromNewDouble(2), "SecondCategory", "SecondComment", 2);
+		
+		model.editInstallment(0, newInstallment);
+		//t(long id, long transactionId, Money totalValue, Money dailyPayment,
+			//	String dateLastPaid, Money amountPaid, String category, String comment, int flags)
+		Installment resultingInstallment = model.getInstallment(0);
+		assertEquals("Incorrect totalValue",newInstallment.getTotalValue().get(),resultingInstallment.getTotalValue().get());
+		assertEquals("Incorrect dailyPayment",newInstallment.getDailyPayment().get(),resultingInstallment.getDailyPayment().get());
+		assertEquals("Incorrect dateLastPadid",newInstallment.getDateLastPaid(),resultingInstallment.getDateLastPaid());
+		assertEquals("Incorrect amountPaid",newInstallment.getAmountPaid().get(),resultingInstallment.getAmountPaid().get());
+		assertEquals("Incorrect category",newInstallment.getCategory().equalsIgnoreCase(resultingInstallment.getCategory()),true);
+		assertEquals("Incorrect totalValue",newInstallment.getCategory().equalsIgnoreCase(resultingInstallment.getComment()),true);
+		assertEquals("Incorrect totalValue",newInstallment.getFlags(),resultingInstallment.getFlags());
+		
+		
+	}
+	
 	public void testEditAndPayOffInstallment()
 	{
 		double exchangeRate = 2;
