@@ -150,14 +150,16 @@ public class InstallmentsTest extends AndroidTestCase{
 		installment.setPaused(true);
 		assertEquals("Could not add installment.", model.addInstallment(installment), true);
 		addDays(numberOfDays);
+		Money temp = model.payOffInstallments();
+		assertEquals("Installment incorrectly paid off", 0.0, temp.get());
 		List<Installment> installments = model.getInstallments();
 
 		installment = installments.get(0);
 		installment.setPaused(false);
 		model.editInstallment(installment.getId(), installment);
-		addDays(1);
-		Money temp = model.payOffInstallments();
-		assertEquals("Incorrect amount paid", installmentDailyPayment, temp.get());
+		addDays(3);
+		temp = model.payOffInstallments();
+		assertEquals("Incorrect amount paid", installmentDailyPayment*3, temp.get());
 	}
 	
 	public void testEditInstallment() {
@@ -166,8 +168,8 @@ public class InstallmentsTest extends AndroidTestCase{
 		model.addInstallment(installment);
 		
 		Installment newInstallment = new Installment(1, 1, MoneyFactory.createMoneyFromNewDouble(2), MoneyFactory.createMoneyFromNewDouble(2),
-				"2013/01/01 00:00", MoneyFactory.createMoneyFromNewDouble(2), "SecondCategory", "SecondComment", 2);
-		
+				"2013/01/01 00:00", MoneyFactory.createMoneyFromNewDouble(2), "SecondCategory", "SecondComment", 0);
+		newInstallment.setPaused(true);
 		List<Installment> installments = model.getInstallments();
 		model.editInstallment(installments.get(0).getId(), newInstallment);
 		//t(long id, long transactionId, Money totalValue, Money dailyPayment,
@@ -176,10 +178,10 @@ public class InstallmentsTest extends AndroidTestCase{
 		assertEquals("Incorrect totalValue",newInstallment.getTotalValue().get(),resultingInstallment.getTotalValue().get());
 		assertEquals("Incorrect dailyPayment",newInstallment.getDailyPayment().get(),resultingInstallment.getDailyPayment().get());
 		assertEquals("Incorrect dateLastPadid",newInstallment.getDateLastPaid(),resultingInstallment.getDateLastPaid());
-		assertEquals("Incorrect amountPaid",newInstallment.getAmountPaid().get(),resultingInstallment.getAmountPaid().get());
-		assertEquals("Incorrect category",newInstallment.getCategory().equalsIgnoreCase(resultingInstallment.getCategory()),true);
-		assertEquals("Incorrect totalValue",newInstallment.getCategory().equalsIgnoreCase(resultingInstallment.getComment()),true);
-		assertEquals("Incorrect totalValue",newInstallment.getFlags(),resultingInstallment.getFlags());
+		assertEquals("Incorrect amountPaid",installment.getAmountPaid().get(),resultingInstallment.getAmountPaid().get());
+		assertEquals("Incorrect category",installment.getCategory().equalsIgnoreCase(resultingInstallment.getCategory()),true);
+		assertEquals("Incorrect comment",installment.getComment().equalsIgnoreCase(resultingInstallment.getComment()),true);
+		assertEquals("Incorrect flags",newInstallment.getFlags(),resultingInstallment.getFlags());
 		
 		
 	}
