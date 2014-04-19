@@ -222,6 +222,11 @@ public class MoneyTest extends AndroidTestCase{
 		
 		assertEquals("Not equal",m1.get(),m2.get());
 	}
+	
+	public void testEmptyMoney() {
+		Money m = MoneyFactory.createMoney();
+		assertEquals("Not zero",m.get(), 0.0);
+	}
 
 	public void tearDown()
 	{
