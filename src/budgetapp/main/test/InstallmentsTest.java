@@ -123,6 +123,7 @@ public class InstallmentsTest extends AndroidTestCase{
 		addDays(numberOfDays);
 		assertEquals("Wrong number of days added.", model.addDailyBudget(), numberOfDays);
 		Money temp = model.payOffInstallments();
+		model.processWholeQueue();
 		assertEquals("Incorrect amount paid", 0.0, temp.get());
 		
 		assertEquals("Incorrect current budget after paying of installments",
@@ -150,17 +151,21 @@ public class InstallmentsTest extends AndroidTestCase{
 		installment.setPaused(true);
 		assertEquals("Could not add installment.", model.addInstallment(installment), true);
 		addDays(numberOfDays);
-		Money temp = model.payOffInstallments();
-		assertEquals("Installment incorrectly paid off", 0.0, temp.get());
+		model.payOffInstallments();
+		model.processWholeQueue();
+		assertEquals("Incorrect current budget", -10.0, model.getCurrentBudget().get());
 		List<Installment> installments = model.getInstallments();
 
 		installment = installments.get(0);
 		installment.setPaused(false);
 		model.editInstallment(installment.getId(), installment);
-		installment = model.getInstallment(installment.getId());
+		installment = model.getInstallment(installments.get(0).getId());
+		
 		addDays(3);
-		Money temp2 = model.payOffInstallments();
-		assertEquals("Incorrect amount paid", installmentDailyPayment*3, temp2.get());
+		assertEquals("Installment still paused", installment.isPaused(), false);
+		model.payOffInstallments();
+		model.processWholeQueue();
+		assertEquals("Incorrect current budget", -40.0, model.getCurrentBudget().get());
 	}
 	
 	public void testEditInstallment() {
