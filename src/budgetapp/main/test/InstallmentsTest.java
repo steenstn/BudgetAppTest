@@ -122,9 +122,8 @@ public class InstallmentsTest extends AndroidTestCase{
 		
 		addDays(numberOfDays);
 		assertEquals("Wrong number of days added.", model.addDailyBudget(), numberOfDays);
-		Money temp = model.payOffInstallments();
+		model.payOffInstallments();
 		model.processWholeQueue();
-		assertEquals("Incorrect amount paid", 0.0, temp.get());
 		
 		assertEquals("Incorrect current budget after paying of installments",
 				installmentDailyPayment, model.getCurrentBudget().get());
@@ -214,7 +213,7 @@ public class InstallmentsTest extends AndroidTestCase{
 		
 		addDays(numberOfDays);
 		assertEquals("Wrong number of days added.", model.addDailyBudget(), numberOfDays);
-		Money temp = model.payOffInstallments();
+		model.payOffInstallments();
 		model.processWholeQueue();
 		
 		assertEquals("Incorrect current budget after paying of installments",
