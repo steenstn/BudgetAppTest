@@ -143,7 +143,7 @@ public class InstallmentsTest extends AndroidTestCase{
 		double installmentDailyPayment = -10;
 		double installmentAmountPaid = 0;
 
-		int numberOfDays = 8;
+		int numberOfDays = 2;
 		
 		Installment installment = new Installment(MoneyFactory.createMoneyFromNewDouble(installmentTotalValue), MoneyFactory.createMoneyFromNewDouble(installmentDailyPayment),
 				BudgetFunctions.getDateString(), MoneyFactory.createMoneyFromNewDouble(installmentAmountPaid), "test", "testComment");
@@ -157,9 +157,10 @@ public class InstallmentsTest extends AndroidTestCase{
 		installment = installments.get(0);
 		installment.setPaused(false);
 		model.editInstallment(installment.getId(), installment);
+		installment = model.getInstallment(installment.getId());
 		addDays(3);
-		temp = model.payOffInstallments();
-		assertEquals("Incorrect amount paid", installmentDailyPayment*3, temp.get());
+		Money temp2 = model.payOffInstallments();
+		assertEquals("Incorrect amount paid", installmentDailyPayment*3, temp2.get());
 	}
 	
 	public void testEditInstallment() {
