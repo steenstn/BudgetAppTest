@@ -53,7 +53,7 @@ public class DailyBudgetTest extends AndroidTestCase{
 		model.setDailyBudget(MoneyFactory.createMoneyFromNewDouble(dailyBudget));
 		
 		addDays(numberOfDays);
-		model.addDailyBudget();
+		model.queueAddDailyBudget();
 		model.processWholeQueue();
 		assertEquals("Inncorrect budget after adding daily budget.",
 				dailyBudget * numberOfDays, model.getCurrentBudget().get());
@@ -71,7 +71,7 @@ public class DailyBudgetTest extends AndroidTestCase{
 		model.setDailyBudget(MoneyFactory.createMoneyFromNewDouble(dailyBudget));
 		assertEquals("Daily budget not correct", dailyBudget * exchangeRate, model.getDailyBudget().get());
 		addDays(numberOfDays);
-		model.addDailyBudget();
+		model.queueAddDailyBudget();
 		model.processWholeQueue();
 		assertEquals("Inncorrect budget after adding daily budget.",
 				dailyBudget * numberOfDays * Money.getExchangeRate(), model.getCurrentBudget().get());
@@ -88,7 +88,7 @@ public class DailyBudgetTest extends AndroidTestCase{
 		model.setDailyBudget(MoneyFactory.createMoneyFromNewDouble(dailyBudget));
 
 		addDays(numberOfDays);
-		model.addDailyBudget();
+		model.queueAddDailyBudget();
 		model.processWholeQueue();
 		assertEquals("Inncorrect budget after adding daily budget.",
 				dailyBudget * numberOfDays * Money.getExchangeRate(), model.getCurrentBudget().get());

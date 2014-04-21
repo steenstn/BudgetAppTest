@@ -136,8 +136,8 @@ public class RemoveTransactionTest extends AndroidTestCase{
 		
 		
 		addDays(numberOfDays);
-		assertEquals("Wrong number of days added.", model.addDailyBudget(), numberOfDays);
-		model.payOffInstallments();
+		assertEquals("Wrong number of days added.", model.queueAddDailyBudget(), numberOfDays);
+		model.queuePayOffInstallments();
 		model.processWholeQueue();
 		assertEquals("Incorrect current budget after paying of installments",
 				installmentTotalValue, model.getCurrentBudget().get());
