@@ -33,12 +33,17 @@ public class QueueTest extends AndroidTestCase {
 	
 	}
 	
+	public void tearDown()
+	{
+		BudgetFunctions.TESTING = false;
+		model.clearDatabaseInstance();
+	}
 	public void testQueue() {
 		model.queueTransaction(new BudgetEntry(MoneyFactory.createMoney(),BudgetFunctions.getDateString(),"test"));
 		model.queueTransaction(new BudgetEntry(MoneyFactory.createMoney(),BudgetFunctions.getDateString(),"test"));
 		model.queueTransaction(new BudgetEntry(MoneyFactory.createMoney(),BudgetFunctions.getDateString(),"test"));
 		int remainingItems = model.getRemainingItemsInQueue();
-		assertEquals("Incorrect size", 4, model.getQueueSize());
+		assertEquals("Incorrect size", 5, model.getQueueSize());
 		assertEquals("Incorrect remaining items", 3, remainingItems);
 		model.processQueueItem();
 		remainingItems = model.getRemainingItemsInQueue();
@@ -53,7 +58,7 @@ public class QueueTest extends AndroidTestCase {
 		remainingItems = model.getRemainingItemsInQueue();
 		assertEquals("Incorrect remaining items", 0, remainingItems);
 		model.processQueueItem();
-		assertEquals("Incorrect size", 4, model.getQueueSize());
+		assertEquals("Incorrect size", 5, model.getQueueSize());
 		
 		
 	}

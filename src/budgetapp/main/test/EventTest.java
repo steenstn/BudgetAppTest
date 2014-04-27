@@ -70,7 +70,7 @@ public class EventTest extends AndroidTestCase {
 	public void testLinkedTransaction() {
 		Event event = new Event(0, "testEvent", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", Event.EVENT_ACTIVE);
 		assertTrue("Could not add event", model.addEvent(event));
-
+		
 		event = model.getEvent(model.getIdFromEventName("testEvent"));
 
 		assertEquals("Incorrect event", event.getName(),"testEvent");
@@ -80,5 +80,11 @@ public class EventTest extends AndroidTestCase {
 		model.processWholeQueue();
 		event =  model.getEvent(model.getIdFromEventName("testEvent"));
 		assertEquals("Transaction was not linked with event", event.getTotalCost().get(),entry.getValue().get());
+	}
+	
+	public void tearDown()
+	{
+		BudgetFunctions.TESTING = false;
+		model.clearDatabaseInstance();
 	}
 }
