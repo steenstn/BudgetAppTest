@@ -50,6 +50,13 @@ public class EventTest extends AndroidTestCase {
 		assertEquals("Incorrect flags", startEvent.getFlags(), dbEvent.getFlags());
 	}
 	
+	public void testRemoveEvent() {
+		Event event = new Event(1, "before", "100", "200", "beforecomment", 1);
+		model.addEvent(event);
+		model.removeEvent(model.getEvents().get(0).getId());
+		assertEquals("There are still events in the database", 0, model.getEvents().size());
+	}
+	
 	public void testEditEvent() {
 		Event startEvent = new Event(1, "before", "100", "200", "beforecomment", 1);
 		model.addEvent(startEvent);
@@ -80,6 +87,37 @@ public class EventTest extends AndroidTestCase {
 		model.processWholeQueue();
 		event =  model.getEvent(model.getIdFromEventName("testEvent"));
 		assertEquals("Transaction was not linked with event", event.getTotalCost().get(),entry.getValue().get());
+	}
+	
+	public void testChangeTransactionLink() {
+		Event event1 = new Event(0, "event1", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
+		Event event2 = new Event(0, "event2", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
+		
+		model.addEvent(event1);
+		model.addEvent(event2);
+		
+		event1 = model.getEvents().get(0);
+		event2 = model.getEvents().get(1);
+		
+		BudgetEntry entry = new BudgetEntry(MoneyFactory.createMoneyFromNewDouble(100), BudgetFunctions.getDateString(),"test");
+		model.queueTransaction(entry, event1.getId());
+		model.processWholeQueue();
+		event1 = model.getEvent(event1.getId());
+		event2 = model.getEvent(event2.getId());
+		
+		assertEquals("Incorrect total cost in first event", 100.0, event1.getTotalCost().get());
+		assertEquals("Incorrect total cost in second event", 0.0, event2.getTotalCost().get());
+		
+		long transactionId = event1.getEntries().get(0).getId();
+		
+		model.linkTransactionToEvent(transactionId, event2.getId());
+		
+		event1 = model.getEvent(event1.getId());
+		event2 = model.getEvent(event2.getId());
+		
+		assertEquals("Incorrect total cost in first event", 0.0, event1.getTotalCost().get());
+		assertEquals("Incorrect total cost in second event", 100.0, event2.getTotalCost().get());
+	
 	}
 	
 	public void tearDown()
