@@ -18,13 +18,14 @@ public class EventTest extends AndroidTestCase {
 	String prefix = "test";
 	String startDate = "2012/01/01 00:00";
 	
+	
 	public void setUp()
 	{
 		BudgetFunctions.TESTING = true;
 		mockContext = new RenamingDelegatingContext(getContext(), getContext(), prefix);
 		
 		model = new BudgetModel(mockContext);
-		
+
 		BudgetFunctions.theDate = startDate;
 		Money.setExchangeRate(1.0);
 		model.setDailyBudget(MoneyFactory.createMoney());
@@ -41,12 +42,12 @@ public class EventTest extends AndroidTestCase {
 		model.addEvent(startEvent);
 		List<Event> databaseEvents = model.getEvents();
 		Event dbEvent = databaseEvents.get(0);
-		assertTrue("Incorrect name", startEvent.getName().equalsIgnoreCase(dbEvent.getName()));
-		assertTrue("Incorrect id", startEvent.getId() == dbEvent.getId());
-		assertTrue("Incorrect startDate", startEvent.getStartDate().equalsIgnoreCase(dbEvent.getStartDate()));
-		assertTrue("Incorrect endDate", startEvent.getEndDate().equalsIgnoreCase(dbEvent.getEndDate()));
-		assertTrue("Incorrect comment", startEvent.getComment().equalsIgnoreCase(dbEvent.getComment()));
-		assertTrue("Incorrect flags", startEvent.getFlags() == dbEvent.getFlags());
+		assertEquals("Incorrect name", startEvent.getName(),dbEvent.getName());
+		assertEquals("Incorrect id", startEvent.getId(), dbEvent.getId());
+		assertEquals("Incorrect startDate", startEvent.getStartDate(),dbEvent.getStartDate());
+		assertEquals("Incorrect endDate", startEvent.getEndDate(),dbEvent.getEndDate());
+		assertEquals("Incorrect comment", startEvent.getComment(),dbEvent.getComment());
+		assertEquals("Incorrect flags", startEvent.getFlags(), dbEvent.getFlags());
 	}
 	
 	public void testEditEvent() {
@@ -64,5 +65,20 @@ public class EventTest extends AndroidTestCase {
 		assertTrue("Incorrect endDate", newEvent.getEndDate().equalsIgnoreCase(dbEvent.getEndDate()));
 		assertTrue("Incorrect comment", newEvent.getComment().equalsIgnoreCase(dbEvent.getComment()));
 		assertTrue("Incorrect flags", newEvent.getFlags() == dbEvent.getFlags());
+	}
+	
+	public void testLinkedTransaction() {
+		Event event = new Event(0, "testEvent", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", Event.EVENT_ACTIVE);
+		assertTrue("Could not add event", model.addEvent(event));
+
+		event = model.getEvent(model.getIdFromEventName("testEvent"));
+
+		assertEquals("Incorrect event", event.getName(),"testEvent");
+		
+		BudgetEntry entry = new BudgetEntry(MoneyFactory.createMoneyFromNewDouble(100), BudgetFunctions.getDateString(),"test");
+		model.queueTransaction(entry, event.getId());
+		model.processWholeQueue();
+		event =  model.getEvent(model.getIdFromEventName("testEvent"));
+		assertEquals("Transaction was not linked with event", event.getTotalCost().get(),entry.getValue().get());
 	}
 }

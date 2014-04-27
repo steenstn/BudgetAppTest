@@ -34,12 +34,12 @@ public class InstallmentsTest extends AndroidTestCase{
 		model.setDailyBudget(MoneyFactory.createMoney());
 		
 		assertTrue("Incorrect startDate", startDate.equalsIgnoreCase(BudgetFunctions.getDateString()));
-	
+		assertEquals("Incorrect starting budget.", 0.0,model.getCurrentBudget().get());
 	}
 	
 	public void testAddInstallment()
 	{
-		assertEquals("Incorrect starting budget.", 0.0,model.getCurrentBudget().get());
+		
 		double totalValue = -100;
 		double dailyPayment = -10;
 		Installment installment = new Installment(MoneyFactory.createMoneyFromNewDouble(totalValue), 
@@ -255,7 +255,6 @@ public class InstallmentsTest extends AndroidTestCase{
 				BudgetFunctions.getDateString(), MoneyFactory.createMoneyFromNewDouble(installmentAmountPaid), "test", "testComment");
 		
 		assertEquals("Could not add installment.", model.addInstallment(installment), true);
-		
 		
 		addDays(numberOfDays);
 		assertEquals("Wrong number of days added.", model.queueAddDailyBudget(), numberOfDays);
