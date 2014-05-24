@@ -120,6 +120,28 @@ public class EventTest extends AndroidTestCase {
 	
 	}
 	
+	public void testGetTransactionsFromEvent() {
+		Event event1 = new Event(0, "event1", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
+		model.addEvent(event1);
+		event1 = model.getEvents().get(0);
+		
+		BudgetEntry entry = new BudgetEntry(MoneyFactory.createMoneyFromNewDouble(100), BudgetFunctions.getDateString(),"test");
+		model.queueTransaction(entry);
+		model.queueTransaction(entry);
+		model.queueTransaction(entry);
+		model.processWholeQueue();
+		
+		BudgetEntry eventEntry = new BudgetEntry(MoneyFactory.createMoneyFromNewDouble(100), BudgetFunctions.getDateString(),"eventEntry");
+		
+		model.queueTransaction(eventEntry, event1.getId());
+		model.queueTransaction(eventEntry, event1.getId());
+		model.queueTransaction(eventEntry, event1.getId());
+		model.processWholeQueue();
+		
+		List<BudgetEntry> eventEntries = model.getTransactionsFromEvent(event1.getId());
+		assertEquals("Incorrect number of entries", 3,eventEntries.size());
+	}
+	
 	public void tearDown()
 	{
 		BudgetFunctions.TESTING = false;
