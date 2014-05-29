@@ -7,5 +7,6 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="lib" path="C:/Users/Steen/workspace/BudgetAppTest/libs/android-junit-report-1.5.8.jar"/>
+	<classpathentry kind="lib" path="libs/robotium-solo-5.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
