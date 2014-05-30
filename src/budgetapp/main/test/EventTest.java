@@ -199,6 +199,10 @@ public class EventTest extends AndroidTestCase {
 		model.processWholeQueue();
 		BudgetEntry entry = model.getTransactionsFromEvent(event1.getId()).get(0);
 		model.removeTransaction(entry);
+		
+		assertEquals("Wrong value", 0,model.getEvents().get(0).getTotalCost());
+		assertEquals("Wrong value", 0,model.getEvents().get(1).getTotalCost());
+		
 	}
 	
 	public void tearDown()
