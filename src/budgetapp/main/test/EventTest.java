@@ -214,8 +214,8 @@ public class EventTest
         BudgetEntry entry = model.getTransactionsFromEvent(event1.getId()).get(0);
         model.removeTransaction(entry);
 
-        assertEquals("Wrong value", 0, model.getEvents().get(0).getTotalCost());
-        assertEquals("Wrong value", 0, model.getEvents().get(1).getTotalCost());
+        assertEquals("Wrong value", 0.0, model.getEvents().get(0).getTotalCost().get());
+        assertEquals("Wrong value", 0.0, model.getEvents().get(1).getTotalCost().get());
 
         event1 = model.getEvents().get(0);
         assertEquals("Event has transactions in database", 0, event1.getEntries().size());
