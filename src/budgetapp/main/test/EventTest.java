@@ -150,6 +150,57 @@ public class EventTest extends AndroidTestCase {
 		assertEquals("Incorrect number of entries", 3,eventEntries.size());
 	}
 	
+	public void testAddTransactionToMultipleEvents() {
+		Event event1 = new Event(0, "event1", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
+		Event event2 = new Event(0, "event2", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
+		Event event3 = new Event(0, "event3", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
+		
+		model.addEvent(event1);
+		model.addEvent(event2);
+		model.addEvent(event3);
+		event1 = model.getEvents().get(0);
+		event2 = model.getEvents().get(1);
+		event3 = model.getEvents().get(2);
+		
+		BudgetEntry eventEntry = new BudgetEntry(MoneyFactory.createMoneyFromNewDouble(100), BudgetFunctions.getDateString(),"eventEntry");
+		ArrayList<Long> ids = new ArrayList<Long>();
+		ids.add(event1.getId());
+		ids.add(event2.getId());
+		model.queueTransaction(eventEntry, ids);
+		model.processWholeQueue();
+		
+		List<BudgetEntry> eventEntries = model.getTransactionsFromEvent(event1.getId());
+		assertEquals("Incorrect number of entries", 1,eventEntries.size());
+		
+		eventEntries = model.getTransactionsFromEvent(event2.getId());
+		assertEquals("Incorrect number of entries", 1,eventEntries.size());
+		
+		eventEntries = model.getTransactionsFromEvent(event3.getId());
+		assertEquals("Incorrect number of entries", 0,eventEntries.size());
+	}
+	
+	public void testRemoveTransactionFromMultipleEvents() {
+		Event event1 = new Event(0, "event1", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
+		Event event2 = new Event(0, "event2", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
+		Event event3 = new Event(0, "event3", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
+		
+		model.addEvent(event1);
+		model.addEvent(event2);
+		model.addEvent(event3);
+		event1 = model.getEvents().get(0);
+		event2 = model.getEvents().get(1);
+		event3 = model.getEvents().get(2);
+		
+		BudgetEntry eventEntry = new BudgetEntry(MoneyFactory.createMoneyFromNewDouble(100), BudgetFunctions.getDateString(),"eventEntry");
+		ArrayList<Long> ids = new ArrayList<Long>();
+		ids.add(event1.getId());
+		ids.add(event2.getId());
+		model.queueTransaction(eventEntry, ids);
+		model.processWholeQueue();
+		BudgetEntry entry = model.getTransactionsFromEvent(event1.getId()).get(0);
+		model.removeTransaction(entry);
+	}
+	
 	public void tearDown()
 	{
 		BudgetFunctions.TESTING = false;
