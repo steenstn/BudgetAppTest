@@ -1,5 +1,6 @@
 package budgetapp.main.test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.test.AndroidTestCase;
@@ -83,7 +84,9 @@ public class EventTest extends AndroidTestCase {
 		assertEquals("Incorrect event", event.getName(),"testEvent");
 		
 		BudgetEntry entry = new BudgetEntry(MoneyFactory.createMoneyFromNewDouble(100), BudgetFunctions.getDateString(),"test");
-		model.queueTransaction(entry, event.getId());
+		ArrayList<Long> ids = new ArrayList<Long>();
+		ids.add(event.getId());
+		model.queueTransaction(entry, ids);
 		model.processWholeQueue();
 		event =  model.getEvent(model.getIdFromEventName("testEvent"));
 		assertEquals("Transaction was not linked with event", event.getTotalCost().get(),entry.getValue().get());
@@ -100,7 +103,11 @@ public class EventTest extends AndroidTestCase {
 		event2 = model.getEvents().get(1);
 		
 		BudgetEntry entry = new BudgetEntry(MoneyFactory.createMoneyFromNewDouble(100), BudgetFunctions.getDateString(),"test");
-		model.queueTransaction(entry, event1.getId());
+		
+		ArrayList<Long> ids = new ArrayList<Long>();
+		ids.add(event1.getId());
+		
+		model.queueTransaction(entry, ids);
 		model.processWholeQueue();
 		event1 = model.getEvent(event1.getId());
 		event2 = model.getEvent(event2.getId());
@@ -132,10 +139,11 @@ public class EventTest extends AndroidTestCase {
 		model.processWholeQueue();
 		
 		BudgetEntry eventEntry = new BudgetEntry(MoneyFactory.createMoneyFromNewDouble(100), BudgetFunctions.getDateString(),"eventEntry");
-		
-		model.queueTransaction(eventEntry, event1.getId());
-		model.queueTransaction(eventEntry, event1.getId());
-		model.queueTransaction(eventEntry, event1.getId());
+		ArrayList<Long> ids = new ArrayList<Long>();
+		ids.add(event1.getId());
+		model.queueTransaction(eventEntry, ids);
+		model.queueTransaction(eventEntry, ids);
+		model.queueTransaction(eventEntry, ids);
 		model.processWholeQueue();
 		
 		List<BudgetEntry> eventEntries = model.getTransactionsFromEvent(event1.getId());
