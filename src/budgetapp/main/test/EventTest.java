@@ -244,7 +244,7 @@ public class EventTest
         model.processWholeQueue();
         TransactionCommand command = (TransactionCommand) model.processQueueItem();
 
-        List<Event> linkedEvents = getEventsLinkedToTransaction(command.getEntry().getId());
+        List<Event> linkedEvents = model.getLinkedEventsFromTransactionId(command.getEntry().getId());
         assertEquals("Incorrect number of linked events", 2, linkedEvents.size());
         assertEquals("event1 does not exist", event1.getName(), linkedEvents.get(0).getName());
         assertEquals("event2 does not exist", event2.getName(), linkedEvents.get(1).getName());
