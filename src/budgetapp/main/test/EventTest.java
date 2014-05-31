@@ -51,6 +51,15 @@ public class EventTest
         assertEquals("Incorrect flags", startEvent.getFlags(), dbEvent.getFlags());
     }
 
+    public void testActive() {
+        Event startEvent = new Event(1, "before", "100", "200", "beforecomment", 1);
+        startEvent.setActive(true);
+        assertEquals(true, startEvent.isActive());
+        startEvent.setActive(false);
+        assertEquals(true, startEvent.isActive());
+
+    }
+
     public void testRemoveEvent() {
         Event event = new Event(1, "before", "100", "200", "beforecomment", 1);
         model.addEvent(event);
