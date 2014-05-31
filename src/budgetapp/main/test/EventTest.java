@@ -8,6 +8,7 @@ import android.test.RenamingDelegatingContext;
 import budgetapp.models.BudgetModel;
 import budgetapp.util.BudgetFunctions;
 import budgetapp.util.Event;
+import budgetapp.util.commands.TransactionCommand;
 import budgetapp.util.entries.BudgetEntry;
 import budgetapp.util.money.Money;
 import budgetapp.util.money.MoneyFactory;
@@ -219,6 +220,34 @@ public class EventTest
 
         event1 = model.getEvents().get(0);
         assertEquals("Event has transactions in database", 0, event1.getEntries().size());
+
+    }
+
+    public void getTransactionsEvent() {
+        Event event1 = new Event(0, "event1", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
+        Event event2 = new Event(0, "event2", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
+        Event event3 = new Event(0, "event3", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
+
+        model.addEvent(event1);
+        model.addEvent(event2);
+        model.addEvent(event3);
+        event1 = model.getEvents().get(0);
+        event2 = model.getEvents().get(1);
+        event3 = model.getEvents().get(2);
+
+        BudgetEntry eventEntry = new BudgetEntry(MoneyFactory.createMoneyFromNewDouble(100),
+            BudgetFunctions.getDateString(), "eventEntry");
+        ArrayList<Long> ids = new ArrayList<Long>();
+        ids.add(event1.getId());
+        ids.add(event2.getId());
+        model.queueTransaction(eventEntry, ids);
+        model.processWholeQueue();
+        TransactionCommand command = (TransactionCommand) model.processQueueItem();
+
+        List<Event> linkedEvents = getEventsLinkedToTransaction(command.getEntry().getId());
+        assertEquals("Incorrect number of linked events", 2, linkedEvents.size());
+        assertEquals("event1 does not exist", event1.getName(), linkedEvents.get(0).getName());
+        assertEquals("event2 does not exist", event2.getName(), linkedEvents.get(1).getName());
 
     }
 
