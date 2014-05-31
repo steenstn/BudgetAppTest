@@ -223,7 +223,7 @@ public class EventTest
 
     }
 
-    public void getTransactionsEvent() {
+    public void testGetTransactionsEvent() {
         Event event1 = new Event(0, "event1", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
         Event event2 = new Event(0, "event2", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
         Event event3 = new Event(0, "event3", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
@@ -248,6 +248,25 @@ public class EventTest
         assertEquals("Incorrect number of linked events", 2, linkedEvents.size());
         assertEquals("event1 does not exist", event1.getName(), linkedEvents.get(0).getName());
         assertEquals("event2 does not exist", event2.getName(), linkedEvents.get(1).getName());
+    }
+
+    public void testGetIdsOfActiveEvents() {
+        Event event1 = new Event(0, "event1", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "",
+            Event.EVENT_ACTIVE);
+        Event event2 = new Event(0, "event2", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "",
+            Event.EVENT_ACTIVE);
+        Event event3 = new Event(0, "event3", BudgetFunctions.getDateString(), BudgetFunctions.getDateString(), "", 0);
+
+        model.addEvent(event1);
+        model.addEvent(event2);
+        model.addEvent(event3);
+        event1 = model.getEvents().get(0);
+        event2 = model.getEvents().get(1);
+        event3 = model.getEvents().get(2);
+
+        List<Event> dbEvents = model.getActiveEvents();
+        assertEquals("Incorrect event", event1.getName(), dbEvents.get(0).getName());
+        assertEquals("Incorrect event", event2.getName(), dbEvents.get(1).getName());
 
     }
 
