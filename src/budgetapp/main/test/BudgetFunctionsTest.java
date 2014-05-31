@@ -25,8 +25,9 @@ public class BudgetFunctionsTest
 
     public void testMax() {
         assertEquals(2.0, BudgetFunctions.max(1.0, 2.0));
-        assertEquals(MoneyFactory.createMoneyFromNewDouble(2),
-            BudgetFunctions.max(MoneyFactory.createMoneyFromNewDouble(1), MoneyFactory.createMoneyFromNewDouble(2)));
+        assertEquals(MoneyFactory.createMoneyFromNewDouble(2).get(), BudgetFunctions.max(MoneyFactory
+            .createMoneyFromNewDouble(1)
+            .get(), MoneyFactory.createMoneyFromNewDouble(2).get()));
     }
 
     public void testAlmostEquals() {
