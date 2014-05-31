@@ -40,12 +40,14 @@ public class BudgetFunctionsTest
         assertEquals(2.0, BudgetFunctions.max(1.0, 2.0));
         assertEquals(2.0, BudgetFunctions.max(2.0, 1.0));
 
-        assertEquals(MoneyFactory.createMoneyFromNewDouble(2).get(), BudgetFunctions.max(MoneyFactory
-            .createMoneyFromNewDouble(1)
-            .get(), MoneyFactory.createMoneyFromNewDouble(2).get()));
-        assertEquals(MoneyFactory.createMoneyFromNewDouble(2).get(), BudgetFunctions.max(MoneyFactory
-            .createMoneyFromNewDouble(2)
-            .get(), MoneyFactory.createMoneyFromNewDouble(1).get()));
+        assertEquals(MoneyFactory.createMoneyFromNewDouble(2).get(),
+            BudgetFunctions
+                .max(MoneyFactory.createMoneyFromNewDouble(1), MoneyFactory.createMoneyFromNewDouble(2))
+                .get());
+        assertEquals(MoneyFactory.createMoneyFromNewDouble(2).get(),
+            BudgetFunctions
+                .max(MoneyFactory.createMoneyFromNewDouble(2), MoneyFactory.createMoneyFromNewDouble(1))
+                .get());
     }
 
     public void testAlmostEquals() {
