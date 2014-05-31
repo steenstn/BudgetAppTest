@@ -119,7 +119,7 @@ public class InstallmentsTest
             "test", "testComment");
 
         installment.setTotalValue(MoneyFactory.createMoneyFromNewDouble(2));
-        assertEquals(2, installment.getTotalValue().get());
+        assertEquals(2.0, installment.getTotalValue().get());
 
     }
 
@@ -129,7 +129,7 @@ public class InstallmentsTest
             "test", "testComment");
 
         installment.setdailyPayment(MoneyFactory.createMoneyFromNewDouble(400));
-        assertEquals(400, installment.getDailyPayment().get());
+        assertEquals(400.0, installment.getDailyPayment().get());
     }
 
     public void testPauseInstallment() {

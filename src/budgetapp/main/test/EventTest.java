@@ -56,7 +56,7 @@ public class EventTest
         startEvent.setActive(true);
         assertEquals(true, startEvent.isActive());
         startEvent.setActive(false);
-        assertEquals(true, startEvent.isActive());
+        assertEquals(false, startEvent.isActive());
 
     }
 
