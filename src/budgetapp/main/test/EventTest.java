@@ -125,7 +125,10 @@ public class EventTest
         event1 = model.getEvent(event1.getId());
         event2 = model.getEvent(event2.getId());
 
-        assertEquals("Incorrect total cost in first event", 0.0, event1.getTotalCost().get());
+        assertEquals("Incorrect number of linked events", 2, model
+            .getLinkedEventsFromTransactionId(transactionId)
+            .size());
+        assertEquals("Incorrect total cost in first event", 100.0, event1.getTotalCost().get());
         assertEquals("Incorrect total cost in second event", 100.0, event2.getTotalCost().get());
 
     }
