@@ -70,4 +70,21 @@ public class CurrencyTest
         assertEquals(2.0, dbCurrency.getExchangeRate());
         assertEquals(Currency.CURRENCY_ACTIVE, dbCurrency.getFlags());
     }
+
+    public void testUpdateCurrency() {
+        Currency c = new Currency(0, "kr", 2, Currency.CURRENCY_ACTIVE);
+        model.addCurrency(c);
+
+        Currency dbCurrency = model.getCurrencies().get(0);
+        Currency newCurrency = new Currency(dbCurrency.getId(), "changed", 200, 12);
+        model.editCurrency(dbCurrency.getId(), newCurrency);
+
+        dbCurrency = model.getCurrencies().get(0);
+
+        assertEquals(newCurrency.getSymbol(), dbCurrency.getSymbol());
+        assertEquals(newCurrency.getExchangeRate(), dbCurrency.getExchangeRate());
+        assertEquals(newCurrency.getFlags(), dbCurrency.getFlags());
+        assertEquals(newCurrency.getId(), dbCurrency.getId());
+
+    }
 }
