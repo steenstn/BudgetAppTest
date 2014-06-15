@@ -229,55 +229,6 @@ public class InstallmentsTest
 
     }
 
-    public void testEditAndPayOffInstallment() {
-        double exchangeRate = 2;
-        double installmentTotalValue = -100;
-        double installmentDailyPayment = -10;
-        double installmentAmountPaid = 0;
-
-        double newInstallmentTotalValue = -200;
-        double newInstallmentDailyPayment = -15;
-
-        int numberOfDays = 2;
-
-        Money.setExchangeRate(exchangeRate);
-
-        Installment installment = new Installment(MoneyFactory.createMoneyFromNewDouble(installmentTotalValue),
-            MoneyFactory.createMoneyFromNewDouble(installmentDailyPayment), BudgetFunctions.getDateString(),
-            MoneyFactory.createMoneyFromNewDouble(installmentAmountPaid), "test", "testComment");
-
-        assertEquals("Could not add installment.", model.addInstallment(installment), true);
-
-        addDays(numberOfDays);
-        assertEquals("Wrong number of days added.", model.queueAddDailyBudget(), numberOfDays);
-        model.queuePayOffInstallments();
-        model.processWholeQueue();
-
-        assertEquals("Incorrect current budget after paying of installments", installmentDailyPayment * exchangeRate
-                * numberOfDays + installmentDailyPayment * exchangeRate, model.getCurrentBudget().get());
-
-        List<DayEntry> dayFlow = model.getSomeDays(0, BudgetDataSource.ASCENDING);
-
-        for (int i = 0; i < dayFlow.size(); i++) {
-            assertEquals("Daily flow not correct for day " + dayFlow.get(i).getDate(), installmentDailyPayment
-                    * exchangeRate, dayFlow.get(i).getValue().get());
-        }
-
-        List<Installment> installments = model.getInstallments();
-
-        Installment newInstallment = new Installment(MoneyFactory.createMoneyFromNewDouble(newInstallmentTotalValue),
-            MoneyFactory.createMoneyFromNewDouble(newInstallmentDailyPayment), installments.get(0).getDateLastPaid(),
-            MoneyFactory.createMoney(), "", "");
-        model.editInstallment(installments.get(0).getId(), newInstallment);
-
-        int numberOfDays2 = 5;
-        addDays(numberOfDays2);
-        model.queuePayOffInstallments();
-        model.processWholeQueue();
-        //assertEquals("Incorrect amount paid off after editing",
-        //		newInstallmentDailyPayment * exchangeRate * numberOfDays2, );
-    }
-
     public void testInstallmentPayOffExtraDays() {
         //assertEquals("Incorrect starting budget.", 0.0,model.getCurrentBudget().get());
         double installmentTotalValue = -5;
@@ -355,6 +306,28 @@ public class InstallmentsTest
                     * installmentDailyPayment, dayFlow.get(i).getValue().get());
         }
 
+    }
+
+    public void testMultipleQueueing() {
+
+        Installment installment = new Installment(MoneyFactory.createMoneyFromNewDouble(-100),
+            MoneyFactory.createMoneyFromNewDouble(-10), BudgetFunctions.getDateString(),
+            MoneyFactory.createMoneyFromNewDouble(0), "test", "testComment");
+
+        model.addInstallment(installment);
+
+        addDays(1);
+        model.queueAddDailyBudget();
+
+        model.queuePayOffInstallments();
+        model.queuePayOffInstallments();
+        model.queuePayOffInstallments();
+        model.queuePayOffInstallments();
+        model.queuePayOffInstallments();
+        model.processWholeQueue();
+        Installment dbInstallment = model.getInstallments().get(0);
+        assertEquals("Paid to much", -20.0, dbInstallment.getAmountPaid().get());
+        assertEquals(-20.0, model.getCurrentBudget().get());
     }
 
     public void testInstallmentsHighExchangeRate() {
